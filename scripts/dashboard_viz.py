@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from PIL import Image
 import matplotlib.pyplot as plt
+import seaborn as sns
 from os.path import exists as file_exists
 import streamlit as st
 
@@ -77,13 +78,23 @@ class VizManager:
         self.save_tracker()
 
 
-    def plot_bar(self, df, col, title, save = False, name = None, desc = None):
+    def plot_bar(self, df, cat1, cat2, title, save = False, name = None, desc = None):
         
-        plt.bar(df[col[0]],df[col[1]])
-        plt.title(title)
-        plt.xlabel(col[0])
-        plt.ylabel(col[1])
+        plt.figure(figsize=(9,7))
+        if(cat2 != "None"):
+            ax=sns.countplot(x =df[cat1], hue=cat2, data = df) 
+            #plt.legend( ['No', 'Yes'])
+        else:
+            ax=sns.countplot(x =df[cat1], data = df)
+
+        ax.set_xlabel(cat1, fontsize=15)
+        ax.set_ylabel('Count' , fontsize=15)
+        ax.set_title(title, fontsize=15, fontweight='bold')
+        for tick in ax.get_xticklabels():
+            tick.set_rotation(45)
+        
         plt.show()
+        
         if (save):
             self.save_charts(plt, name, desc)
 
@@ -98,7 +109,7 @@ class VizManager:
         # Creating autocpt arguments
         def func(pct, allvalues):
             absolute = int(pct / 100.*np.sum(allvalues))
-            return "{:.1f}%\n({:d} g)".format(pct, absolute)
+            return "{:.1f}%\n({:d} count)".format(pct, absolute)
         
         fig, ax = plt.subplots(figsize =(10, 7))
         wedges, texts, autotexts = ax.pie(df[col[1]],
