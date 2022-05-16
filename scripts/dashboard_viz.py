@@ -4,6 +4,7 @@ import numpy as np
 from PIL import Image
 import matplotlib.pyplot as plt
 from os.path import exists as file_exists
+import streamlit as st
 
 class VizManager:
     """
@@ -46,16 +47,20 @@ class VizManager:
             self.chart_tracker_df = pd.DataFrame(tracker_dict)
     
     
-    def load_charts(self, st, chart_name):
+    def load_charts(self):
         """
         loading charts from charts folder and descriptions from
         the tracking csv file.    
         """
-        desc = self.chart_tracker_df[self.chart_tracker_df["chart_name"] == chart_name].iloc[1,2]
+        for index in range(self.chart_tracker_df.shape[0]):
+            if(index > 0):
+                desc = self.chart_tracker_df.iloc[index,1]
+                name = self.chart_tracker_df.iloc[index,0]
 
-        st.subheader("Applications Data Usage")
-        image = Image.open(self.charts_dir+"/"+chart_name)
-        st.image(image, caption = desc)
+                st.subheader("Applications Data Usage")
+                image = Image.open(self.charts_dir+"/"+name+".png")
+                st.image(image, caption = desc)
+
 
     def save_charts(self, pltc, name, desc):
         """
