@@ -47,4 +47,5 @@ class DistributionPlots:
     def null_alt_distribution(self, C_total, E_total, C_cr, E_cr) -> None:
         bcr = C_cr
         mde = E_cr - C_cr
-        HPP.hypo_plot(C_total, E_total, bcr, mde, show_power=True, show_beta=True, show_alpha=True, show_p_value=True)
+        HPP.hypo_plot(C_total, E_total, bcr, mde, sig_level=0.05, show_power=True, show_beta=True,
+                  show_alpha=True, show_p_value=True, show_legend=True)
