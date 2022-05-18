@@ -47,7 +47,8 @@ SmartAd ran this campaign from 3-10 July 2020. The users that were presented wit
 ## Features
 
 ### Data Processing and Analysis
-  - ![ML_flow](https://github.com/benbel376/SmartAd_service_analysis/blob/main/mlflow.jpg?raw=true)
+  - ![ML_flow](https://github.com/benbel376/SmartAd_service_analysis/blob/biniyam_main/charts/mlflow.jpg?raw=true)
+  
 ### Scripts
  - All the scripts used by the notebooks are inside the scripts folder.
 
