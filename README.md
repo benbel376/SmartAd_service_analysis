@@ -6,7 +6,7 @@
 
 **Table of content**
 
-- [Telecom User Analytics](#Telecom_user_analytics)
+- [SmartAd](#User's data analysis)
   - [Overview](#overview)
   - [Requirements](#requirements)
   - [Install](#install)
@@ -19,12 +19,14 @@
 ## Overview
 
 SmartAd is a mobile first advertiser agency. It designs intuitive touch-enabled advertising.
-The main objective of this project is to test if the ads that the advertising company runs resulted in a significant lift in brand awareness. 
+The main objective of this project is to test if the ads that the advertising company runs resulted in a significant lift in brand awareness.
 
 ## Requirements
-  Python 3.7 and above
+
+Python 3.7 and above
 
 ## Install
+
 ```
 git clone https://github.com/benbel376/SmartAd_service_analysis.git
 cd SmartAd_service_analysis
@@ -32,12 +34,12 @@ pip install -r requirements.txt
 ```
 
 ## Data
-  The BIO data for this project is a “Yes” and “No” response of online users to the following question
 
+The BIO data for this project is a “Yes” and “No” response of online users to the following question
 
     Q: Do you know the brand Lux?
-		O  Yes
-		O  No
+    	O  Yes
+    	O  No
 
 SmartAd ran this campaign from 3-10 July 2020. The users that were presented with the questionnaire above were chosen according to the following rule:
 
@@ -46,10 +48,18 @@ SmartAd ran this campaign from 3-10 July 2020. The users that were presented wit
 
 ## Features
 
+### ML Pipeline design flow chart
+
+![Flow chart](charts/ML_pipeline_design_flowchart.PNG)
+
 ### Data Processing and Analysis
-  - 
+
+-
+
 ### Scripts
- - All the scripts used by the notebooks are inside the scripts folder.
+
+- All the scripts used by the notebooks are inside the scripts folder.
 
 ### Test
- - Tests for the scripts are inside the tests folder.
+
+- Tests for the scripts are inside the tests folder.
