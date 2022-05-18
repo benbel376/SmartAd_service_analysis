@@ -13,6 +13,21 @@ sumar = DataSummarizer()
 
 class DataProcessor:
 
+    def load_data(self, path):
+        original_df = pd.read_csv(path+"/SmartAd_original_data.csv")
+        print("data loaded successfully!")
+        return original_df
+
+    def show_info(self, df):
+        # Taking a look at the data
+
+        print("the data has "+str(df.shape[0])+" rows, and "+str(df.shape[1])+" columns")
+        
+        print("\n Dataset information \n")
+        print(df.info())
+    
+        return df
+    
     def add_datetime(self, df):
         def turn_hour(x):
             if(x < 10):
@@ -44,49 +59,47 @@ class DataProcessor:
 
         control_df = df.loc[df["experiment"] == "control"]
         exposed_df = df.loc[df["experiment"] == "exposed"]
+        print("dataframe splitted")
 
         cont_date_aggr = sumar.find_agg(control_df, ["datetime"], ["yes", "no"], ["sum", "count"], ["success", "engagement"])
-        expo_date_aggr = sumar.find_agg(control_df, ["datetime"], ["yes", "no"], ["sum", "count"], ["success", "engagement"])
+        expo_date_aggr = sumar.find_agg(exposed_df, ["datetime"], ["yes", "no"], ["sum", "count"], ["success", "engagement"])
+        print("dataframe aggregated on datetime")
 
         cont_bern = self.generate_bern_series(cont_date_aggr["engagement"].to_list(), cont_date_aggr["success"].to_list())
         expo_bern = self.generate_bern_series(expo_date_aggr["engagement"].to_list(), expo_date_aggr["success"].to_list())
+        print("bernaulli series generated")
+
+        return np.array(expo_bern), np.array(cont_bern)
 
 
-        return np.array(cont_bern), np.array(expo_bern)
+    def clean_missing(self, df):
+
+        print ("Missing values: ", df.loc[((df["yes"]== 0) & (df["no"]==0))].shape[0])
+
+        clean_df = df.loc[~((df["yes"]== 0) & (df["no"]==0))]
+
+        print("Usable rows: ", clean_df.shape[0])
+
+        return df
 
     
 
 
 class ConditionalSPRT:
 
-    def __init__(self, x, y, odd_ratio, alpha=0.05, beta=0.10, stop=None):
-        self.x = x
-        self.y = y
-        self.odd_ratio = odd_ratio
-        self.alpha = alpha
-        self.beta = beta
-        self.stop = stop
+    def __init__(self):
+        pass
 
-
-    def run(self):
-        res = self.conditionalSPRT(self.x, self.y, self.odd_ratio,
-                            self.alpha, self.beta,
-                            self.stop)
-        return res
-    def resJson(self, res):
+    def get_output(self, res):
         outcome,n, k,l,u,truncated,truncate_decision,x1,r,stats,limits = res
-        jsonRes = {
-            "name": "Sequential AB testing",
+        output = {
+            "Test": "Sequential AB testing",
             "outcome": outcome,
-            "decsionMadeIndex": k,
-            "numberOfObservation": len(n),
-            "truncated": truncated,
-            "truncateDecision": truncate_decision,        
-    
+            "numberOfObservation": len(n)       
         }
-        return jsonRes
+        return output
     
-    def plotExperiment(self, res):
+    def plot_output(self, res):
         outcome,n, k,l,u,truncated,truncate_decision,x1,r,stats,limits = res
         lower = limits[:, 0]
         upper = limits[:,1]
@@ -103,8 +116,11 @@ class ConditionalSPRT:
 
         plt.show()
 
-    def conditionalSPRT(self, x,y,t1,alpha=0.05,beta=0.10,stop=None):
-        
+    def conditionalSPRT(self, compiled,t1,alpha=0.05,beta=0.10,stop=None):
+        x, y = compiled
+        print("control df received", len(y))
+        print("exposed df received", len(x))
+        print("or, alpha, beta: ", t1, alpha, beta)
         if t1<=1:
             print('warning',"Odd ratio should exceed 1.")
         if (alpha >0.5) | (beta >0.5):
@@ -199,6 +215,7 @@ class ConditionalSPRT:
         # Perform the test by finding the first index, if any, at which `stats`
         # falls outside the open interval (l, u).
         #
+        print("stats generated")
         clu=list(map(clowerUpper,r,n,[t1]*len(r),[1]*len(r),[alpha]*len(r), [beta]*len(r)))
         limits=[]
         for v in clu:
@@ -210,6 +227,7 @@ class ConditionalSPRT:
 
         k=np.where((stats>=u) | (stats<=l))
         cvalues=stats[k]
+
         if cvalues.shape[0]<1:
             k= np.nan
             outcome='Unable to conclude.Needs more sample.'
