@@ -37,5 +37,5 @@ def aggregate_exprement_group():
 
 def pipeline(clean, aggregate):
     clean()
-    ggg = aggregate()
+    aggregate()
     print("merber")
