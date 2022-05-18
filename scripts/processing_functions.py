@@ -70,6 +70,11 @@ class DataProcessor:
         return ber_ser
 
     def transform_data(self, df):
+        """
+        transforms the data by splitting it in to two datasets
+        and then by extracting a bernaullie series out of it.
+        df: the data frame.
+        """
         df = df.copy()
 
         df = self.add_datetime(df)
@@ -90,6 +95,10 @@ class DataProcessor:
 
 
     def clean_missing(self, df):
+        """
+        cleans data where both yes and no values are zero
+        df: the dataframe.
+        """
 
         print ("Missing values: ", df.loc[((df["yes"]== 0) & (df["no"]==0))].shape[0])
 
