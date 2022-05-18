@@ -80,7 +80,7 @@ class DataProcessor:
 
         print("Usable rows: ", clean_df.shape[0])
 
-        return df
+        return clean_df
 
     
 
