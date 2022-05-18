@@ -50,7 +50,7 @@ SmartAd ran this campaign from 3-10 July 2020. The users that were presented wit
 
 ### ML Pipeline design flow chart
 
-![Flow chart](charts/ML_pipeline_design_flowchart.PNG)
+![Flow chart](../charts/ML_pipeline_design_flowchart.PNG)
 
 ### Data Processing and Analysis
 
