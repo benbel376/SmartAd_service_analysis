@@ -12,15 +12,23 @@ from data_summarizing_functions import DataSummarizer
 sumar = DataSummarizer()
 
 class DataProcessor:
-
+    """
+    Data loading and cleaning functions
+    """
     def load_data(self, path):
+        """
+        data loading function
+        path: the path of the data.
+        """
         original_df = pd.read_csv(path+"/SmartAd_original_data.csv")
         print("data loaded successfully!")
         return original_df
 
     def show_info(self, df):
-        # Taking a look at the data
-
+        """
+        displays basic information about a dataset
+        df: the dataset input
+        """
         print("the data has "+str(df.shape[0])+" rows, and "+str(df.shape[1])+" columns")
         
         print("\n Dataset information \n")
@@ -29,6 +37,10 @@ class DataProcessor:
         return df
     
     def add_datetime(self, df):
+        """
+        adds a new column by combining date and hour columns
+        df: the dataframe input
+        """
         def turn_hour(x):
             if(x < 10):
                 return "0"+str(x)+":00:00"
@@ -42,6 +54,11 @@ class DataProcessor:
         return df
 
     def generate_bern_series(self, engagment_list, success_list):
+        """
+        generates a bernaullie series out of two lists
+        engagement_list: the first list
+        success_list: the second list
+        """
         ber_ser = []
 
         for e, s in zip(engagment_list, success_list) :
@@ -127,7 +144,7 @@ class ConditionalSPRT:
             print('warning',"Unrealistic values of alpha or beta were passed."
                     +" You should have good reason to use large alpha & beta values")
         if stop!=None:
-            stop=math.floor(n0)
+            stop=math.floor(0)
 
         def comb(n, k):
             return math.factorial(n) // math.factorial(k) // math.factorial(n - k)
