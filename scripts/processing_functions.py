@@ -12,6 +12,21 @@ from data_summarizing_functions import DataSummarizer
 sumar = DataSummarizer()
 
 class DataProcessor:
+    
+    def load_data(self, path):
+        original_df = pd.read_csv(path+"/SmartAd_original_data.csv")
+        print("data loaded successfully!")
+        return original_df
+    
+    def show_info(self, df):
+        # Taking a look at the data
+
+        print("the data has "+str(df.shape[0])+" rows, and "+str(df.shape[1])+" columns")
+        
+        print("\n Dataset information \n")
+        print(df.info())
+    
+        return df
 
     def add_datetime(self, df):
         def turn_hour(x):
@@ -44,6 +59,7 @@ class DataProcessor:
 
         control_df = df.loc[df["experiment"] == "control"]
         exposed_df = df.loc[df["experiment"] == "exposed"]
+        print("dataframe splitted")
 
         cont_date_aggr = sumar.find_agg(control_df, ["datetime"], ["yes", "no"], ["sum", "count"], ["success", "engagement"])
         expo_date_aggr = sumar.find_agg(control_df, ["datetime"], ["yes", "no"], ["sum", "count"], ["success", "engagement"])
@@ -53,6 +69,17 @@ class DataProcessor:
 
 
         return np.array(cont_bern), np.array(expo_bern)
+    
+    def clean_missing(self, df):
+
+        print ("Missing values: ", df.loc[((df["yes"]== 0) & (df["no"]==0))].shape[0])
+
+        clean_df = df.loc[~((df["yes"]== 0) & (df["no"]==0))]
+
+        print("Usable rows: ", clean_df.shape[0])
+
+        return clean_df
+    
 
     
 
@@ -88,7 +115,11 @@ class ConditionalSPRT:
 
         plt.show()
 
-    def conditionalSPRT(self, x,y,t1,alpha=0.05,beta=0.10,stop=None):
+    def conditionalSPRT(self, compiled,t1,alpha=0.05,beta=0.10,stop=None):
+        x, y = compiled
+        print("control df received", len(y))
+        print("exposed df received", len(x))
+        print("or, alpha, beta: ", t1, alpha, beta)
         
         if t1<=1:
             print('warning',"Odd ratio should exceed 1.")
